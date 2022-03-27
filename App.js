@@ -1,9 +1,11 @@
 import React, {useEffect, useState} from 'react';
+import {dictionary} from './src/dictionary';
 import {
   StyleSheet,
   StatusBar,
   Text,
   View,
+  Button,
   SafeAreaView,
   ScrollView,
   Alert,
@@ -11,6 +13,8 @@ import {
 } from 'react-native';
 import {colors, CLEAR, ENTER, colorsToEmoji} from './src/constants';
 import Keyboard from './src/components/Keyboard';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from 'react-native-screens/native-stack';
 
 const NUMBER_OF_TRIES = 6;
 
@@ -18,63 +22,34 @@ const copyArray = arr => {
   return [...arr.map(rows => [...rows])];
 };
 
-const getDayOfTheYear = () => {
-  const now = new Date();
-  const start = new Date(now.getFullYear(), 0, 0);
-  const diff = now - start;
-  const oneDay = 1000 * 60 * 60 * 24;
-  const day = Math.floor(diff / oneDay);
-  return day;
-};
-const dayOfTheYear = getDayOfTheYear();
-const words = [
-  'world',
-  'hello',
-  'world',
-  'hello',
-  'world',
-  'hello',
-  'world',
-  'hello',
-  'world',
-  'hello',
-  'world',
-  'hello',
-  'world',
-  'hello',
-  'world',
-  'hello',
-  'world',
-  'hello',
-  'world',
-  'hello',
-  'world',
-  'hello',
-  'world',
-  'hello',
-  'world',
-  'hello',
-  'world',
-  'hello',
-  'world',
-  'hello',
-  'world',
-  'hello',
-  'world',
-  'hello',
-  'world',
-  'hello',
-  'world',
-  'hello',
-  'world',
-  'hello',
-  'world',
-  'hello',
-  'world',
-];
-
 export default function App() {
-  const word = words[3];
+  const Stack = createNativeStackNavigator();
+
+  return (
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}>
+        <Stack.Screen name={'Home'} component={HomeScreen} />
+        <Stack.Screen name="Game" component={GameScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+function HomeScreen({navigation}) {
+  return (
+    <SafeAreaView style={styles.container}>
+      <Text style={styles.title}> </Text>
+      <Text style={styles.title}>WORDLE</Text>
+      <Button title={'Zagraj'} onPress={() => navigation.navigate('Game')} />
+    </SafeAreaView>
+  );
+}
+
+function GameScreen({navigation}) {
+  const word = dictionary[Math.floor(Math.random() * dictionary.length)];
   const letters = word.split(''); // ['h', 'e', 'l', 'l', 'o']
 
   const [rows, setRows] = useState(
@@ -90,7 +65,6 @@ export default function App() {
     }
   }, [checkGameState, curRow]);
 
-  // eslint-disable-next-line react-hooks/exhaustive-deps
   const checkGameState = () => {
     if (checkIfWon() && gameState !== 'won') {
       Alert.alert('Huraaay', 'You won!', [

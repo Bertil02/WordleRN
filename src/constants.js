@@ -14,7 +14,7 @@ export const colorsToEmoji = {
 };
 
 export const ENTER = 'ENTER';
-export const CLEAR = 'CLEAR';
+export const CLEAR = 'DEL';
 
 export const keys = [
   ['q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'],

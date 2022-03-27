@@ -4,7 +4,7 @@ import {keys, colors} from '../../constants';
 
 const screenWidth = Dimensions.get('window').width;
 export const keyWidth = (screenWidth - 10) / keys[0].length;
-const keyHeight = keyWidth * 1.3;
+const keyHeight = keyWidth * 2;
 
 export default StyleSheet.create({
   keyboard: {
@@ -18,7 +18,7 @@ export default StyleSheet.create({
   },
   key: {
     width: keyWidth - 4,
-    height: keyHeight - 4,
+    height: keyHeight - 6,
     margin: 2,
     borderRadius: 5,
     backgroundColor: colors.grey,
@@ -28,5 +28,6 @@ export default StyleSheet.create({
   keyText: {
     color: colors.lightgrey,
     fontWeight: 'bold',
+    fontSize: 16,
   },
 });
