@@ -16,41 +16,15 @@ import Keyboard from './src/components/Keyboard';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from 'react-native-screens/native-stack';
 
-const NUMBER_OF_TRIES = 6;
-
-const copyArray = arr => {
-  return [...arr.map(rows => [...rows])];
-};
+const word = dictionary[Math.floor(Math.random() * dictionary.length)];
+const letters = word.split(''); // ['h', 'e', 'l', 'l', 'o']
 
 export default function App() {
-  const Stack = createNativeStackNavigator();
+  const NUMBER_OF_TRIES = 6;
 
-  return (
-    <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{
-          headerShown: false,
-        }}>
-        <Stack.Screen name={'Home'} component={HomeScreen} />
-        <Stack.Screen name="Game" component={GameScreen} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-}
-
-function HomeScreen({navigation}) {
-  return (
-    <SafeAreaView style={styles.container}>
-      <Text style={styles.title}> </Text>
-      <Text style={styles.title}>WORDLE</Text>
-      <Button title={'Zagraj'} onPress={() => navigation.navigate('Game')} />
-    </SafeAreaView>
-  );
-}
-
-function GameScreen({navigation}) {
-  const word = dictionary[Math.floor(Math.random() * dictionary.length)];
-  const letters = word.split(''); // ['h', 'e', 'l', 'l', 'o']
+  const copyArray = arr => {
+    return [...arr.map(rows => [...rows])];
+  };
 
   const [rows, setRows] = useState(
     new Array(NUMBER_OF_TRIES).fill(new Array(letters.length).fill('')),
@@ -63,7 +37,7 @@ function GameScreen({navigation}) {
     if (curRow > 0) {
       checkGameState();
     }
-  }, [checkGameState, curRow]);
+  }, [curRow]);
 
   const checkGameState = () => {
     if (checkIfWon() && gameState !== 'won') {
@@ -161,42 +135,68 @@ function GameScreen({navigation}) {
   const yellowCaps = getAllLettersWithColor(colors.secondary);
   const greyCaps = getAllLettersWithColor(colors.darkgrey);
 
+  const Stack = createNativeStackNavigator();
+
+  function HomeScreen({navigation}) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <Text style={styles.title}> </Text>
+        <Text style={styles.title}>WORDLE</Text>
+        <Button title={'Zagraj'} onPress={() => navigation.navigate('Game')} />
+      </SafeAreaView>
+    );
+  }
+
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar style="light" />
-
-      <Text style={styles.title}>WORDLE</Text>
-
-      <ScrollView style={styles.map}>
-        {rows.map((row, i) => (
-          <View key={`row-${i}`} style={styles.row}>
-            {row.map((letter, j) => (
-              <View
-                key={`cell-${i}-${j}`}
-                style={[
-                  styles.cell,
-                  {
-                    borderColor: isCellActive(i, j)
-                      ? colors.grey
-                      : colors.darkgrey,
-                    backgroundColor: getCellBGColor(i, j),
-                  },
-                ]}>
-                <Text style={styles.cellText}>{letter.toUpperCase()}</Text>
-              </View>
-            ))}
-          </View>
-        ))}
-      </ScrollView>
-
-      <Keyboard
-        onKeyPressed={onKeyPressed}
-        greenCaps={greenCaps} // ['a', 'b']
-        yellowCaps={yellowCaps}
-        greyCaps={greyCaps}
-      />
-    </SafeAreaView>
+    <NavigationContainer>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: false,
+        }}>
+        <Stack.Screen name={'Home'} component={HomeScreen} />
+        <Stack.Screen name="Game" component={GameScreen} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
+
+  function GameScreen({navigation}) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <StatusBar style="light" />
+
+        <Text style={styles.title}>WORDLE</Text>
+
+        <ScrollView style={styles.map}>
+          {rows.map((row, i) => (
+            <View key={`row-${i}`} style={styles.row}>
+              {row.map((letter, j) => (
+                <View
+                  key={`cell-${i}-${j}`}
+                  style={[
+                    styles.cell,
+                    {
+                      borderColor: isCellActive(i, j)
+                        ? colors.grey
+                        : colors.darkgrey,
+                      backgroundColor: getCellBGColor(i, j),
+                    },
+                  ]}>
+                  <Text style={styles.cellText}>{letter.toUpperCase()}</Text>
+                </View>
+              ))}
+            </View>
+          ))}
+        </ScrollView>
+
+        <Keyboard
+          onKeyPressed={onKeyPressed}
+          greenCaps={greenCaps} // ['a', 'b']
+          yellowCaps={yellowCaps}
+          greyCaps={greyCaps}
+        />
+      </SafeAreaView>
+    );
+  }
 }
 
 const styles = StyleSheet.create({

@@ -1,4 +1,4 @@
-import React from "react";
+import React from 'react';
 import {View, Text, Pressable} from 'react-native';
 import {keys, ENTER, CLEAR, colors} from '../../constants';
 import styles, {keyWidth} from './Keyboard.styles';
